@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.1.xsd " default-init-method="myInit" default-destroy-method="myDestroy">
+
+    <aop:aspectj-autoproxy/>
+
+    <bean id="triangle" class="com.aop.model.Triangle">
+        <property name="name" value="Triangle Name" />
+    </bean>
+    <bean id="circle" class="com.aop.model.Circle">
+
+    </bean>
+    <bean id="shapeservice" class="com.aop.services.ShapeServices" autowire="byName"></bean>
+
+    <bean name="loggingAspect" class="com.aop.aspect.LoggingAspect"/>
+    
+    <aop:config>
+        <aop:aspect id="loggingAspect" ref="loggingAspect">
+            <aop:pointcut id="allGetters" expression="execution(public * get*(..))"/>
+            <aop:before method="loggingAdvise" pointcut-ref="allGetters"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

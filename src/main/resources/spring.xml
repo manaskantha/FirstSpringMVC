@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd" default-init-method="myInit" default-destroy-method="myDestroy">
+
+    <context:annotation-config/>
+
+    <bean id="triangle" class="com.test.Triangle" autowire="byName">
+
+    </bean>
+
+    <bean id="parentsquare" class="com.test.Square" abstract="true">
+        <property name="points">
+            <list>
+                <ref bean="point0"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="square" class="com.test.Square" parent="parentsquare">
+        <property name="points">
+            <list merge="true">
+                <ref bean="point1"/>
+                <ref bean="point2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="point0" class="com.test.Point">
+        <property name="x" value="${pointA.pointX}" />
+        <property name="y" value="${pointA.pointY}" />
+    </bean>
+
+    <bean id="point1" class="com.test.Point" scope="prototype">
+        <property name="x" value="20" />
+        <property name="y" value="0" />
+    </bean>
+
+    <bean id="point2" class="com.test.Point" scope="prototype">
+        <property name="x" value="-20" />
+        <property name="y" value="0" />
+    </bean>
+
+    <bean id="point3" class="com.test.Point">
+        <qualifier value="circleQualifier" />
+        <property name="x" value="0" />
+        <property name="y" value="0" />
+    </bean>
+    <alias name="square" alias="square-alias"/>
+
+    <!--<bean id="circle" class="com.test.Circle">-->
+
+    <!--</bean>-->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+    </bean>
+
+    <context:component-scan base-package="com.test" />
+
+    <bean class="com.test.DemoBeanPostProcessor" />
+    <bean class="org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver" />
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="pointsconfig.properties"/>
+    </bean>
+
+</beans>
